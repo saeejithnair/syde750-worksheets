@@ -2,8 +2,8 @@
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.15270893239950115 0.32423123744171567 0.9335706114871108 1.633733247812461
-  position 2.5966933234317175 -1.5355767887140677 0.610917366719104
+  orientation -0.41153269158656786 0.08157978756715137 0.9077365157445266 3.19341649153293
+  position 9.90160586564396 3.0980295253590002 7.292181592260519
 }
 TexturedBackground {
 }
@@ -11,8 +11,8 @@ RectangleArena {
   floorSize 5 5
 }
 Robot {
-  translation 2.400275451032756 0.0023645134881593844 0.039720955156113166
-  rotation 0.9999978634549633 -0.0011898260531208328 0.001690384415391791 1.5708184677176482
+  translation -2.4001392844407574 -0.00026932302576762623 0.03972072794413233
+  rotation 0.9999994845521251 0.0007179577761321673 -0.0007179360110511731 1.5707978263400486
   children [
     DEF BODY Shape {
       appearance PBRAppearance {
@@ -26,7 +26,7 @@ Robot {
     }
     DEF WHEEL1 HingeJoint {
       jointParameters HingeJointParameters {
-        position -95.03996782393027
+        position -2955.1208620654643
         axis 0 0 1
         anchor 0.06 0 0.05
       }
@@ -37,7 +37,7 @@ Robot {
       ]
       endPoint Solid {
         translation 0.06 0 0.05
-        rotation 0 0 1 5.4909970909431145
+        rotation 0 0 -1 2.023767691058636
         children [
           DEF WHEEL Transform {
             rotation 0 0 1 1.5708
@@ -60,22 +60,19 @@ Robot {
         boundingObject USE WHEEL
         physics Physics {
         }
+        linearVelocity 1.5093480093765378e-09 4.84090022012438e-10 2.024782103075496e-10
+        angularVelocity -1.394172737515424e-08 -2.014968445869434 -1.9868897432817466e-06
       }
     }
     DEF WHEEL2 HingeJoint {
       jointParameters HingeJointParameters {
-        position -95.03996786387893
+        position -2338.153170081484
         axis 0 0 1
         anchor -0.06 0 0.05
       }
-      device [
-        RotationalMotor {
-          name "wheel2"
-        }
-      ]
       endPoint Solid {
         translation -0.06 0 0.05
-        rotation 0 0 1 5.490997050994455
+        rotation 0 0 -1 0.8082358106777804
         children [
           USE WHEEL
         ]
@@ -83,11 +80,13 @@ Robot {
         boundingObject USE WHEEL
         physics Physics {
         }
+        linearVelocity 1.5916015823431338e-09 7.109947380379697e-10 1.8492618757757868e-08
+        angularVelocity -5.590717417354093e-08 -2.1126187255023312e-07 -1.9574908424616672e-09
       }
     }
     DEF WHEEL3 HingeJoint {
       jointParameters HingeJointParameters {
-        position -95.03996771709878
+        position -2955.1206437546994
         axis 0 0 1
         anchor 0.06 0 -0.05
       }
@@ -98,7 +97,7 @@ Robot {
       ]
       endPoint Solid {
         translation 0.06 0 -0.05
-        rotation 0 0 1 5.4909971977746075
+        rotation 0 0 -1 2.0235493802937143
         children [
           USE WHEEL
         ]
@@ -106,22 +105,19 @@ Robot {
         boundingObject USE WHEEL
         physics Physics {
         }
+        linearVelocity 1.7041642635150788e-09 4.840963011365232e-10 -5.278489967378372e-09
+        angularVelocity -1.3941608604057474e-08 -2.01497471695301 -1.986895921837605e-06
       }
     }
     DEF WHEEL4 HingeJoint {
       jointParameters HingeJointParameters {
-        position -95.03996776166923
+        position -2263.24669211589
         axis 0 0 1
         anchor -0.06 0 -0.05
       }
-      device [
-        RotationalMotor {
-          name "wheel4"
-        }
-      ]
       endPoint Solid {
         translation -0.06 0 -0.05
-        rotation 0 0 1 5.490997153204153
+        rotation 0 0 -1 1.2999815312386687
         children [
           USE WHEEL
         ]
@@ -129,6 +125,8 @@ Robot {
         boundingObject USE WHEEL
         physics Physics {
         }
+        linearVelocity 1.7418235267067203e-09 7.110006618728308e-10 1.297004408336305e-08
+        angularVelocity -5.59071850198337e-08 -1.403521988925466e-07 -1.9574187493549485e-09
       }
     }
     LightSensor {
@@ -146,6 +144,11 @@ Robot {
         }
       ]
       name "ls_left"
+      lookupTable [
+        0 0 0
+        1 100 0
+        10 1000 0
+      ]
     }
     LightSensor {
       translation 0.1 0 -0.03
@@ -162,6 +165,11 @@ Robot {
         }
       ]
       name "ls_right"
+      lookupTable [
+        0 0 0
+        1 100 0
+        10 1000 0
+      ]
     }
   ]
   boundingObject USE BODY
@@ -170,8 +178,14 @@ Robot {
     mass 1
   }
   controller "braitenberg_vehicle"
+  linearVelocity 1.6203096180333888e-09 6.058324123982186e-10 6.695390936783952e-09
+  angularVelocity -5.59058786883059e-08 1.5473610908120438e-07 -1.9564912414876606e-09
 }
 PointLight {
-  attenuation 0 0 1
+  attenuation 0 0 12.56
+  intensity 100
   location 0.5 0 0
+  castShadows TRUE
+}
+TexturedBackgroundLight {
 }
