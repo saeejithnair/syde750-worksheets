@@ -49,32 +49,56 @@ class BraitenbergVehicle:
         
         return (output1, output2)
             
-    def run_robot(self, transfer_function):
+    def run_robot(self, motivational_state):
+        connection_type, attraction_type = motivational_state
         # Perform simulation steps until Webots is stopped by the controller
         while self.robot.step(self.TIMESTEP) != -1:
             # Read the sensors:
-            if transfer_function == 'linear':
-                ls_val = self.sensors['ls_center'].getValue()/100.0
+            left_light_val = self.sensors['ls_left'].getValue()
+            right_light_val = self.sensors['ls_right'].getValue()
+    
+            # Process sensor data here.
+            if connection_type == 'direct':
+                left_speed, right_speed = self.transfer_function_double_connection(
+                                           left_light_val, right_light_val, attraction_type)
+            elif connection_type == 'cross':
+                # For cross connection, swap connection sides.
+                right_speed, left_speed = self.transfer_function_double_connection(
+                                           left_light_val, right_light_val, attraction_type)
             else:
-                # Robot doesn't like extremes. Moves very quickly if too much
-                # or not enough light.
-                ls_val = self.sensors['ls_center'].getValue()/100.0
-                if ls_val < 3 or ls_val > 7:
-                    ls_val = self.MAX_SPEED
+                raise ValueError(f'Unsupported connection type {connection_type}')
             
-            print(ls_val)
+            print(f'{left_light_val:.3f}, {right_light_val:.4f}, {left_speed:.4f}, {right_speed:.4f}')
+        
+            # left_speed = left_light_val/100
+            # right_speed = right_light_val/100
+            # left_speed = right_light_val/100
+            # right_speed = left_light_val/100
+
+        
+            # Enter here functions to send actuator commands, like:
+            # Wheel 1 and 2 is on the right side
+            self.wheels['wheel4'].setVelocity(right_speed)
+            self.wheels['wheel2'].setVelocity(right_speed)
+            # self.wheels['wheel2'].setVelocity(right_speed)
             
-            self.wheels['wheel3'].setVelocity(ls_val)
+            # Wheel 3,4 are on the left side
+            self.wheels['wheel3'].setVelocity(left_speed)
+            self.wheels['wheel1'].setVelocity(left_speed)
+            # self.wheels['wheel4'].setVelocity(left_speed)
 
 if __name__ == "__main__":
     # Create Braitenberg Vehicle
-    wheel_names = ["wheel3"]
-    light_sensor_names = ['ls_center']
+    wheel_names = ["wheel1", "wheel2", "wheel3", "wheel4"]
+    # wheel_names = ["wheel3", "wheel4"]
+    # wheel_names = ["wheel1", "wheel2"]
+    light_sensor_names = ['ls_left', 'ls_right']
     braitenberg_vehicle = BraitenbergVehicle(wheel_names, light_sensor_names)
     
     # Define motivational states
-    transfer_function_linear = 'linear'
-    transfer_function_hate_extrema = 'hate_extrema'
+    aggression = ('cross', 'proportional')
+    fear = ('direct', 'proportional')
+    love = ('cross', 'inverse')
     
-    braitenberg_vehicle.run_robot(transfer_function_hate_extrema)
+    braitenberg_vehicle.run_robot(love)
     
