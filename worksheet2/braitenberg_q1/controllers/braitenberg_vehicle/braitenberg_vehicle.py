@@ -25,7 +25,7 @@ class BraitenbergVehicle:
         
         self.setup_robot(self.wheel_names, self.sensor_names)
         
-        self.signs = {'attract': -1.0, 'repel': 1.0}
+        self.signs = {'inverse': -1.0, 'proportional': 1.0}
         
     def setup_robot(self, wheel_names, sensor_names):        
         # Enable motors
@@ -45,7 +45,8 @@ class BraitenbergVehicle:
         
         return (output1, output2)
             
-    def run_robot(self, connection_type, attraction_type):
+    def run_robot(self, motivational_state):
+        connection_type, attraction_type = motivational_state
         # Perform simulation steps until Webots is stopped by the controller
         while self.robot.step(self.TIMESTEP) != -1:
             # Read the sensors:
@@ -63,23 +64,28 @@ class BraitenbergVehicle:
             else:
                 raise ValueError(f'Unsupported connection type {connection_type}')
             
-            print(left_speed, right_speed)
+            print(f'{left_light_val:.3f}, {right_light_val:.4f}, {left_speed:.4f}, {right_speed:.4f}')
         
             # Enter here functions to send actuator commands, like:
             # Wheel 1 and 2 is on the right side
-            self.wheels['wheel1'].setVelocity(right_speed)
+            self.wheels['wheel2'].setVelocity(-1.0*right_speed)
             # self.wheels['wheel2'].setVelocity(right_speed)
             
             # Wheel 3,4 are on the left side
-            self.wheels['wheel3'].setVelocity(left_speed)
+            self.wheels['wheel4'].setVelocity(-1.0*left_speed)
             # self.wheels['wheel4'].setVelocity(left_speed)
 
 if __name__ == "__main__":
     # Create Braitenberg Vehicle
-    wheel_names = ["wheel1", "wheel2", "wheel3", "wheel4"]
-    wheel_names = ["wheel1", "wheel3"]
+    # wheel_names = ["wheel1", "wheel2", "wheel3", "wheel4"]
+    wheel_names = ["wheel2", "wheel4"]
     light_sensor_names = ['ls_left', 'ls_right']
     braitenberg_vehicle = BraitenbergVehicle(wheel_names, light_sensor_names)
     
-    braitenberg_vehicle.run_robot(connection_type='cross', attraction_type='repel')
+    # Define motivational states
+    aggression = ('cross', 'proportional')
+    fear = ('direct', 'proportional')
+    love = ('direct', 'inverse')
+    
+    braitenberg_vehicle.run_robot(fear)
     
