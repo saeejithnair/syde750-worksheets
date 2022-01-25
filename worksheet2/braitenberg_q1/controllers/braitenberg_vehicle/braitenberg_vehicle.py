@@ -39,7 +39,7 @@ class BraitenbergVehicle:
             self.sensors[sensor_names[i]] = self.robot.getDevice(sensor_names[i])
             self.sensors[sensor_names[i]].enable(self.TIMESTEP)
             
-    def transfer_function_double_connection(self, input1, input2, sign=-1.0):
+    def transfer_function_double_connection(self, input1, input2, sign):
         output1 = sign*input1/self.normalization_factor
         output2 = sign*input2/self.normalization_factor
         
@@ -66,26 +66,35 @@ class BraitenbergVehicle:
             
             print(f'{left_light_val:.3f}, {right_light_val:.4f}, {left_speed:.4f}, {right_speed:.4f}')
         
+            # left_speed = left_light_val/100
+            # right_speed = right_light_val/100
+            # left_speed = right_light_val/100
+            # right_speed = left_light_val/100
+
+        
             # Enter here functions to send actuator commands, like:
             # Wheel 1 and 2 is on the right side
-            self.wheels['wheel2'].setVelocity(-1.0*right_speed)
+            self.wheels['wheel4'].setVelocity(right_speed)
+            self.wheels['wheel2'].setVelocity(right_speed)
             # self.wheels['wheel2'].setVelocity(right_speed)
             
             # Wheel 3,4 are on the left side
-            self.wheels['wheel4'].setVelocity(-1.0*left_speed)
+            self.wheels['wheel3'].setVelocity(left_speed)
+            self.wheels['wheel1'].setVelocity(left_speed)
             # self.wheels['wheel4'].setVelocity(left_speed)
 
 if __name__ == "__main__":
     # Create Braitenberg Vehicle
-    # wheel_names = ["wheel1", "wheel2", "wheel3", "wheel4"]
-    wheel_names = ["wheel2", "wheel4"]
+    wheel_names = ["wheel1", "wheel2", "wheel3", "wheel4"]
+    # wheel_names = ["wheel3", "wheel4"]
+    # wheel_names = ["wheel1", "wheel2"]
     light_sensor_names = ['ls_left', 'ls_right']
     braitenberg_vehicle = BraitenbergVehicle(wheel_names, light_sensor_names)
     
     # Define motivational states
     aggression = ('cross', 'proportional')
     fear = ('direct', 'proportional')
-    love = ('direct', 'inverse')
+    love = ('cross', 'inverse')
     
-    braitenberg_vehicle.run_robot(fear)
+    braitenberg_vehicle.run_robot(love)
     
